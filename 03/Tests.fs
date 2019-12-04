@@ -3,23 +3,22 @@ module Tests
 open System
 open Xunit
 open FsUnit.Xunit
-
-let foo x =
-    x + 5
-
-let solve input = 159
-
+open Solve
+    
 [<Fact>]
-let ``My test`` () =
-    true |> should equal true
-    foo 5 |> should equal 10
+let ``expandPathSegment`` () =
+    expandPathSegment "U4" |> should equal "UUUU"
+    
+[<Fact>]
+let ``expandPath`` () =
+    expandPath "U2,R3" |> should equal "UURRR"
     
 [<Fact>]
 let ``test case 1`` () =
     let input = """R75,D30,R83,U83,L12,D49,R71,U7,L72
 U62,R66,U55,R34,D71,R55,D58,R83"""
     solve input |> should equal 159
-    
+ 
 [<Fact>]
 let ``test case 2`` () =
     let input = """R98,U47,R26,D63,R33,U87,L62,D20,R33,U53,R51
