@@ -21,25 +21,26 @@ let vectorForDir = function
 let addVec a b =
     (fst a + fst b, snd a + snd b)
     
-let rec pointsForPathRec (pos:int*int) (input:string) =
+let rec pointsForPathRec (pos:int*int) (input:string) (accum:(int*int) list)=
     if input.Length = 0 then
-        []
+        accum
     else
         let tail = input.Substring 1
         let head = input.[0]
         let p = (addVec pos (vectorForDir head))
-        p::(pointsForPathRec p tail)
+        (pointsForPathRec p tail (p::accum))
         
 let pointsForPath input =
-    pointsForPathRec (0,0) input
+    pointsForPathRec (0,0) input [] |> List.rev
     
 let manhattan (input:int*int) =
-    fst input + snd input
+    (input |> fst |> abs) + (input |> snd |> abs)
+    
 let solve (input:string) =
     let lines = input.Split('\n')
     assert (lines.Length = 2)
-    let points1 = lines.[0] |> expandPath |> pointsForPath |> Set.ofList
-    let points2 = lines.[1] |> expandPath |> pointsForPath |> Set.ofList
+    let points1 = lines.[0] |> expandPath |> pointsForPath |> Set.ofSeq
+    let points2 = lines.[1] |> expandPath |> pointsForPath |> Set.ofSeq
     let intersection = Set.intersect points1 points2
     intersection |> Set.toSeq |> Seq.sortBy manhattan |> Seq.head |> manhattan
     
