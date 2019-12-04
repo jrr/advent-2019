@@ -6,18 +6,37 @@ open FsUnit.Xunit
 open Solve
     
 [<Fact>]
-let ``expandPathSegment`` () =
+let ``pointsForPath empty`` () =
+    pointsForPath "" |> should equal []
+    
+[<Fact>]
+let ``pointsForPath 1`` () =
+    pointsForPath "R" |> should equal [(1,0)]
+    
+[<Fact>]
+let ``pointsForPath 2`` () =
+    pointsForPath "RRULD" |> should equal [(1,0);(2,0);(2,1);(1,1);(1,0)]
+    
+[<Fact>]
+let expandPathSegment () =
     expandPathSegment "U4" |> should equal "UUUU"
     
 [<Fact>]
-let ``expandPath`` () =
+let expandPath () =
     expandPath "U2,R3" |> should equal "UURRR"
+    
+    
+[<Fact>]
+let ``test case 0`` () =
+    let input = """R8,U5,L5,D3
+U7,R6,D4,L4"""
+    solve input |> should equal 6
     
 [<Fact>]
 let ``test case 1`` () =
     let input = """R75,D30,R83,U83,L12,D49,R71,U7,L72
 U62,R66,U55,R34,D71,R55,D58,R83"""
-    solve input |> should equal 159
+    solve input |> should equal 159    
  
 [<Fact>]
 let ``test case 2`` () =

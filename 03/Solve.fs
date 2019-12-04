@@ -12,10 +12,37 @@ let expandPathSegment (input:string) =
 let expandPath (input:string) =
     input.Split "," |> Seq.map expandPathSegment |> String.concat ""
     
-let pointsForPath input =
-    "foo"
+let vectorForDir = function
+    | 'U' -> ( 0, 1)
+    | 'D' -> ( 0,-1)
+    | 'R' -> ( 1, 0)
+    | 'L' -> (-1, 0)
     
-let solve input =
+let addVec a b =
+    (fst a + fst b, snd a + snd b)
+    
+let rec pointsForPathRec (pos:int*int) (input:string) =
+    if input.Length = 0 then
+        []
+    else
+        let tail = input.Substring 1
+        let head = input.[0]
+        let p = (addVec pos (vectorForDir head))
+        p::(pointsForPathRec p tail)
+        
+let pointsForPath input =
+    pointsForPathRec (0,0) input
+    
+let manhattan (input:int*int) =
+    fst input + snd input
+let solve (input:string) =
+    let lines = input.Split('\n')
+    assert (lines.Length = 2)
+    let points1 = lines.[0] |> expandPath |> pointsForPath |> Set.ofList
+    let points2 = lines.[1] |> expandPath |> pointsForPath |> Set.ofList
+    let intersection = Set.intersect points1 points2
+    intersection |> Set.toSeq |> Seq.sortBy manhattan |> Seq.head |> manhattan
+    
     (*
     approach:
     
@@ -26,6 +53,5 @@ let solve input =
     find first point that exists in both sets
     *)
     
-    159
     
 
