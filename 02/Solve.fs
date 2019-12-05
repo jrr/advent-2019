@@ -56,3 +56,20 @@ let rec process (instructions : int seq) (pos:int) =
 let solve (input:string) =
     let instructions = input.Split ',' |> Seq.map Int32.Parse
     process instructions 0
+    
+let solveWithParams (input:string) a b =
+    let instructions = input.Split ',' |> Seq.map Int32.Parse
+    let instructions = replace instructions 1 a
+    let instructions = replace instructions 2 b
+    
+    process instructions 0
+let paramSeq () =
+    seq {
+        for i in [0..99] do
+            for j in [0..99] do
+                yield (i,j)
+    }
+    
+let tryParams (input:string) =
+    paramSeq ()
+        |> Seq.tryFind (fun (i,j) -> solveWithParams input i j |> Seq.head = 19690720 )
