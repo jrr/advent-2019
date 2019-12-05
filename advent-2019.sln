@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 15.0.26124.0
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "03", "03\03.fsproj", "{1F235C47-CF0C-4C9D-8B55-FF0F57F2A657}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "04", "04\04.fsproj", "{F55459F4-BCAB-4D1D-A2B3-4412A883E68D}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "template", "template\template.fsproj", "{2038ED0F-873F-4C88-8113-C10120441808}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,5 +46,17 @@ Global
 		{F55459F4-BCAB-4D1D-A2B3-4412A883E68D}.Release|x64.Build.0 = Release|Any CPU
 		{F55459F4-BCAB-4D1D-A2B3-4412A883E68D}.Release|x86.ActiveCfg = Release|Any CPU
 		{F55459F4-BCAB-4D1D-A2B3-4412A883E68D}.Release|x86.Build.0 = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|x64.Build.0 = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Debug|x86.Build.0 = Debug|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|x64.ActiveCfg = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|x64.Build.0 = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|x86.ActiveCfg = Release|Any CPU
+		{2038ED0F-873F-4C88-8113-C10120441808}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
