@@ -27,6 +27,39 @@ let hasAdjacentMatchingDigits (s:string) =
 let monotonicallyIncreasing (s:string) =
     s |> Seq.pairwise |> Seq.tryFind (fun (a,b) -> a > b) |> Option.isNone
 
+let consecutiveGroups (input:string) : string list =
+    input |> Seq.fold (fun (accum:string list) (b:char) ->
+        match accum,b with
+        | [],b -> [sprintf "%c" b]
+        | head::tail,b ->
+            if head.[0] = b then
+                (sprintf "%s%c" head b)::tail
+            else
+                (sprintf "%c" b)::head::tail
+        
+//        m
+//        let head = accum |> List.head
+//        let tail = accum |> List.tail
+//        printfn "head tail? %s %s" (head.ToString()) (tail.ToString())
+//        if accum.Length = 0 then
+//            [sprintf "%c" b]
+//        else
+//            let head::tail = accum
+//    ////        printfn "asdf"
+//    //        []
+//            if head.Length = 0 then
+//                [sprintf "%c" b]
+//            else
+//                let result = (sprintf "%s%c" head b)::tail
+//                result
+            
+        ) []
+//    [input]
+    
+    
+let matchingNeighborGroupOfLengthTwo (s:string) =
+    s |> consecutiveGroups |> Seq.tryFind (fun g -> g.Length = 2) |> Option.isSome
+    
 let solve (input:string) =
     input
         |> parse
@@ -38,3 +71,13 @@ let solve (input:string) =
         |> Seq.length
    
 
+
+let solve2 (input:string) =
+    input
+        |> parse
+        |> seqFrom
+        |> Seq.map (fun s -> s.ToString())
+        |> Seq.where lengthSix
+        |> Seq.where matchingNeighborGroupOfLengthTwo
+        |> Seq.where monotonicallyIncreasing
+        |> Seq.length

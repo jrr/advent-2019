@@ -34,3 +34,33 @@ let ``monotonicallyIncreasing false`` () =
 [<Fact>]
 let ``solves problem`` () =
     solve "108457-562041" |> should equal 2779
+    
+[<Fact>]
+let ``consecutiveGroups 1`` () =
+    consecutiveGroups "a" |> should equal ["a"]
+    
+[<Fact>]
+let ``consecutiveGroups 2`` () =
+    consecutiveGroups "aa" |> should equal ["aa"]
+    
+[<Fact>]
+let ``consecutiveGroups 3`` () =
+    consecutiveGroups "abbbccb" |> should equal ["b";"cc";"bbb";"a"]
+
+
+[<Fact>]
+let ``matchingNeighborGroupOfLengthTwo false`` () =
+    matchingNeighborGroupOfLengthTwo "aaabcccc" |> should equal false
+    
+[<Fact>]
+let ``matchingNeighborGroupOfLengthTwo true`` () =
+    matchingNeighborGroupOfLengthTwo "abbbccd" |> should equal true
+    
+[<Fact>]
+let ``matchingNeighborGroupOfLengthTwo examples `` () =
+    matchingNeighborGroupOfLengthTwo "112233" |> should equal true
+    matchingNeighborGroupOfLengthTwo "123444" |> should equal false
+    matchingNeighborGroupOfLengthTwo "111122" |> should equal true
+[<Fact>]
+let ``solves problem B`` () =
+    solve2 "108457-562041" |> should equal 1972
