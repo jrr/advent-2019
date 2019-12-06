@@ -35,7 +35,7 @@ let expandModes (modeBits:int list) (num:int) =
                             | _ -> failwith "oops" )
     
 let mapOperands (modeBits:int list) (operands:int list) : Operand list =
-    let expandedModes = expandModes modeBits operands.Length
+    let expandedModes = expandModes modeBits operands.Length |> Seq.rev
     let zipped = Seq.zip operands expandedModes
     zipped |> Seq.map (fun (operand,mode) ->
             match mode with
@@ -53,14 +53,18 @@ let instructionAt (instructions : int seq) (pos:int) =
         let [a;b;c] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList) |> mapOperands modeBits
         Add (a,b,c)
     | 2 ->
-        let _::a::b::c::_  = (current |> Seq.take 4 |> Seq.toList)|> mapOperands modeBits
+        let numOperands = 3
+        let [a;b;c] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
         Multiply (a,b,c)
     | 3 ->
-        let _::a::_ = (current |> Seq.take 2 |> Seq.toList)|> mapOperands modeBits
+        let numOperands = 1
+        let [a] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
         Input a
     | 4 ->
-        let _::a::_ = (current |> Seq.take 2 |> Seq.toList)|> mapOperands modeBits
-        Output (a)
+        let numOperands = 1
+        let [a] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
+        Output a
+    | _ -> failwith "unimplemented opcode"
     
         
     
@@ -138,9 +142,12 @@ let nopIo : IOFunctions = {
     InputFunction = fun () -> 5 ; //failwith "oops";
     OutputFunction = fun _ -> ()
 }
-let solve (input:string) =
+
+let solveWithIO (input:string) (io:IOFunctions) =
     let instructions = input.Split ',' |> Seq.map Int32.Parse
-    process instructions 0 nopIo
+    process instructions 0 io
+    
+let solve (input:string) = solveWithIO input nopIo
     
 let solveWithParams (input:string) a b =
     let instructions = input.Split ',' |> Seq.map Int32.Parse
@@ -148,6 +155,7 @@ let solveWithParams (input:string) a b =
     let instructions = replace instructions 2 b
     
     process instructions 0 nopIo
+    
     
 let paramSeq () =
     seq {
