@@ -1,23 +1,43 @@
 module Solve
 open System
+open System
 
+type Operand = int
 type Instruction =
     | Halt
-    | Add of int*int*int
-    | Multiply of int*int*int
+    | Add of Operand*Operand*Operand
+    | Multiply of Operand*Operand*Operand
+    | Input of Operand
+    | Output of Operand
+    
+let decodeOpCode (input:int) =
+    let opCode = input % 100
+    let modes = (input / 100)
+                    |> sprintf "%d"
+                    |> Seq.map string
+                    |> Seq.map Int32.Parse
+                    |> List.ofSeq
+    modes,opCode
     
 let instructionAt (instructions : int seq) (pos:int) =
 //    let current = instructions |> Seq.skip pos // |> Seq.take 4 |> Seq.toList
     let current = instructions |> Seq.skip pos
-    let opCode = current |> Seq.head
+    let modes,opCode = current |> Seq.head |> decodeOpCode
     match opCode with
     | 99 -> Halt
     | 1 ->
-        let _::a::b::c::_ = (current |> Seq.take 4 |> Seq.toList)
+        let [a;b;c] = (current |> Seq.skip 1 |> Seq.take 3 |> Seq.toList)
         Add (a,b,c)
     | 2 ->
         let _::a::b::c::_  = (current |> Seq.take 4 |> Seq.toList)
         Multiply (a,b,c)
+    | 3 ->
+        let _::a::_ = (current |> Seq.take 2 |> Seq.toList)
+        Input a
+    | 4 ->
+        let _::a::_ = (current |> Seq.take 2 |> Seq.toList)
+        Output (a)
+    
         
     
 let replace (list:int seq) pos value =
