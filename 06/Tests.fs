@@ -63,3 +63,11 @@ A)B
 A)C"
     let map = buildMap input
     walk map "COM" 0 |> should equal {nodes=4; orbits=5}
+    
+[<Fact>]
+let ``solves 6B example`` () =
+    sixBee Test_Inputs.sixBExample |> should equal 4
+    
+[<Fact>]
+let ``solves 6B`` () =
+    sixBee Test_Inputs.puzzle6input |> should equal 499
