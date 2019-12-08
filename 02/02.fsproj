@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <Compile Include="Instructions.fs" />
+    <Compile Include="InstructionImplementations.fs" />
     <Compile Include="Solve.fs" />
     <Compile Include="Instructions.Test.fs" />
     <Compile Include="Tests.fs" />

@@ -1,6 +1,7 @@
 module Solve
 open System
 open Instructions
+open InstructionImplementations
     
 let replace (list:int seq) pos value =
     list |> Seq.mapi (fun i x ->
@@ -9,41 +10,6 @@ let replace (list:int seq) pos value =
         else
             x
         )
-    
-let lookupPosition instructions pos =
-    instructions |> Seq.skip pos |> Seq.head
-    
-let lookupOperand instructions op =
-    match op with
-    | Immediate x -> x
-    | Position x -> lookupPosition instructions x
-    
-let add (instructions : int seq) a b c =
-    let num1 = a |> lookupOperand instructions
-    let num2 = b |> lookupOperand instructions
-
-    let sum = num1 + num2
-    
-    let destination = match c with
-                        | Immediate _ -> failwith "oops"
-                        | Position x -> x
-                        
-    replace instructions destination sum
-    
-let multiply (instructions : int seq) a b c =
-    let num1 = a |> lookupOperand instructions
-    let num2 = b |> lookupOperand instructions
-    let product = num1 * num2
-    let destination = match c with
-                        | Immediate _ -> failwith "oops"
-                        | Position x -> x
-    replace instructions destination product
-    
-let input  (instructions : int seq) a inputValue =
-    let destination = match a with
-                        | Immediate _ -> failwith "oops"
-                        | Position x -> x
-    replace instructions destination inputValue
     
 type IOFunctions = {
         InputFunction : unit -> int;
@@ -57,19 +23,19 @@ let rec process (instructions : int seq) (pos:int) (io:IOFunctions) =
     | Halt ->
         instructions
     | Add (a,b,c) ->
-        let updated = add instructions a b c
-        process updated (pos+4) io
+        let updatedInstructions,iptr = add instructions a b c pos
+        process updatedInstructions iptr io
     | Multiply (a,b,c) ->
-        let updated = multiply instructions a b c
-        process updated (pos+4) io
+        let updatedInstructions,iptr = multiply instructions a b c pos
+        process updatedInstructions iptr io
     | Input a ->
         let inputValue = io.InputFunction ()
-        let updated = input instructions a inputValue
-        process updated (pos+2) io
+        let updatedInstructions,iptr = input instructions a inputValue pos
+        process updatedInstructions iptr io
     | Output a ->
-        let outputValue = a |> lookupOperand instructions
+        let updatedInstructions,iptr,outputValue = output instructions a pos
         io.OutputFunction outputValue
-        process instructions (pos+2) io
+        process updatedInstructions iptr io
     | _ -> failwith "unimplemented instruction"
     
 let nopIo : IOFunctions = {
