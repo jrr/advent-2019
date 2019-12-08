@@ -48,3 +48,43 @@ let output (instructions : int seq) a (pos:int)=
     let outputValue = a |> lookupOperand instructions
     instructions,(pos+2),outputValue
     
+let jumpIfTrue (instructions : int seq) a b (pos:int)=
+    let num1 = a |> lookupOperand instructions
+    let num2 = b |> lookupOperand instructions
+    if num1 = 0 then
+        instructions,(pos+3)
+    else
+        instructions,(num2)
+            
+let jumpIfFalse (instructions : int seq) a b (pos:int)=
+    let num1 = a |> lookupOperand instructions
+    let num2 = b |> lookupOperand instructions
+    if num1 <> 0 then
+        instructions,(pos+3)
+    else
+        instructions,(num2)
+        
+let equals (instructions : int seq) a b c (pos:int)=
+    let num1 = a |> lookupOperand instructions
+    let num2 = b |> lookupOperand instructions
+    
+    let destination = match c with
+                        | Immediate _ -> failwith "oops"
+                        | Position x -> x
+    if num1 = num2 then
+        (replace instructions destination 1),pos+4
+    else
+        (replace instructions destination 0),pos+4
+        
+let lessThan (instructions : int seq) a b c (pos:int)=
+    let num1 = a |> lookupOperand instructions
+    let num2 = b |> lookupOperand instructions
+    
+    let destination = match c with
+                        | Immediate _ -> failwith "oops"
+                        | Position x -> x
+    if num1 < num2 then
+        (replace instructions destination 1),pos+4
+    else
+        (replace instructions destination 0),pos+4
+        

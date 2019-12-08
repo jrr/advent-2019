@@ -1,5 +1,6 @@
 module Instructions
 open System
+open System.Diagnostics
 
 type OperandMode =
     | PositionMode
@@ -67,6 +68,7 @@ let instructionAt (instructions : int seq) (pos:int) =
     let currentInstructions = instructions |> Seq.skip pos
     let modeBits,opCode = currentInstructions |> Seq.head |> decodeOpCode
     let opEnum:InstructionEnum = enum opCode
+    (sprintf "opEnum %s" (opEnum.ToString())) |> Debug.WriteLine 
     let consumeOperands (n:int) (modeBits:int list) = Seq.skip 1 >> Seq.take n >> Seq.toList >> mapOperands modeBits
     let consume1Operand () = consumeOperands 1 modeBits >> (fun [a] -> a)
     let consume2Operands () = consumeOperands 2 modeBits >> (fun [a;b] -> (a,b))
@@ -90,11 +92,5 @@ let instructionAt (instructions : int seq) (pos:int) =
         currentInstructions |> consume3Operands () |> LessThan
     | InstructionEnum.Equals ->
         currentInstructions |> consume3Operands() |> Equals
-    | _ -> failwith "unimplemented opcode"
+    | o -> failwith (sprintf "unimplemented opcode %d" <| int o)
 
-    (*
-    Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
-    Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
-    Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-    Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
-    *)

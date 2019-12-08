@@ -82,5 +82,27 @@ let ``solves 5B`` () =
     result |> ignore
     let outputs = output |> Seq.take (output.Length - 1) |> Seq.toList
     let final = output |> Seq.skip (output.Length - 1) |> Seq.head
-    outputs |> List.distinct |> should equal [0]
-    final |> should equal "foo"
+//    outputs |> List.distinct |> should equal [0]
+    final |> should equal 9386583
+
+let fiveBexample = "3,21,1008,21,8,20,1005,20,22,107,8,21,20,1006,20,31,
+1106,0,36,98,0,0,1002,21,125,20,4,20,1105,1,46,104,
+999,1105,1,46,1101,1000,1,20,4,20,1105,1,46,98,99"
+[<Fact>]
+let ``solves 5B example`` () =
+    let runWithInput (i:int) =
+        let mutable output : int list = []
+        let testIo : IOFunctions = {
+            InputFunction = fun () -> i
+            OutputFunction = (fun x ->
+                output <- List.append output [x])
+        }
+        let result = solveWithIO fiveBexample testIo
+        result |> ignore
+        let outputs = output |> Seq.take (output.Length - 1) |> Seq.toList
+        let final = output |> Seq.skip (output.Length - 1) |> Seq.head
+        final
+        
+    runWithInput 1 |> should equal 999
+    runWithInput 8 |> should equal 1000
+    runWithInput 15 |> should equal 1001

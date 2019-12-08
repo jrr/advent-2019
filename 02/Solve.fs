@@ -36,7 +36,27 @@ let rec process (instructions : int seq) (pos:int) (io:IOFunctions) =
         let updatedInstructions,iptr,outputValue = output instructions a pos
         io.OutputFunction outputValue
         process updatedInstructions iptr io
-    | _ -> failwith "unimplemented instruction"
+    | JumpIfTrue (a,b) ->
+        let updatedInstructions,iptr = jumpIfTrue instructions a b pos
+        process updatedInstructions iptr io
+    | JumpIfFalse (a,b) ->
+        let updatedInstructions,iptr = jumpIfFalse instructions a b pos
+        process updatedInstructions iptr io
+    | LessThan (a,b,c) ->
+        let updatedInstructions,iptr = lessThan instructions a b c pos
+        process updatedInstructions iptr io
+    | Equals (a,b,c) ->
+        let updatedInstructions,iptr = equals instructions a b c pos
+        process updatedInstructions iptr io
+        
+    
+    (*
+    Opcode 5 is jump-if-true: if the first parameter is non-zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+    Opcode 6 is jump-if-false: if the first parameter is zero, it sets the instruction pointer to the value from the second parameter. Otherwise, it does nothing.
+    Opcode 7 is less than: if the first parameter is less than the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+    Opcode 8 is equals: if the first parameter is equal to the second parameter, it stores 1 in the position given by the third parameter. Otherwise, it stores 0.
+    *)
+    | i -> failwith (sprintf "unimplemented instruction %s" <| i.ToString())
     
 let nopIo : IOFunctions = {
     InputFunction = fun () -> 5 ; //failwith "oops";
