@@ -69,3 +69,18 @@ let ``solves 5A`` () =
     let final = output |> Seq.skip (output.Length - 1) |> Seq.head
     outputs |> List.distinct |> should equal [0]
     final |> should equal 16489636
+    
+[<Fact>]
+let ``solves 5B`` () =
+    let mutable output : int list = []
+    let testIo : IOFunctions = {
+        InputFunction = fun () -> 5
+        OutputFunction = (fun x ->
+            output <- List.append output [x])
+    }
+    let result = solveWithIO input5a testIo
+    result |> ignore
+    let outputs = output |> Seq.take (output.Length - 1) |> Seq.toList
+    let final = output |> Seq.skip (output.Length - 1) |> Seq.head
+    outputs |> List.distinct |> should equal [0]
+    final |> should equal "foo"
