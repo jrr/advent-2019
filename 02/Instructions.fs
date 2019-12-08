@@ -43,26 +43,29 @@ let decodeOpCode (input:int) =
                     |> Seq.map Int32.Parse
                     |> List.ofSeq
     modes,opCode
+type InstructionT = {
+    OpCode: int
+    Bytes: int
+}
+type InstructionEnum = Halt = 99 | Add = 1 | Multiply = 2 | Input = 3 | Output = 4
 let instructionAt (instructions : int seq) (pos:int) =
     let current = instructions |> Seq.skip pos
     let modeBits,opCode = current |> Seq.head |> decodeOpCode
-    match opCode with
-    | 99 -> Halt
-    | 1 ->
-        let numOperands = 3
-        let [a;b;c] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList) |> mapOperands modeBits
+    let opEnum:InstructionEnum = enum opCode
+    let consumeInstructions (n:int) (modeBits:int list) = Seq.skip 1 >> Seq.take n >> Seq.toList >> mapOperands modeBits
+    match (opEnum) with
+    | InstructionEnum.Halt -> Halt
+    | InstructionEnum.Add ->
+        let [a;b;c] = current |> consumeInstructions 3 modeBits
         Add (a,b,c)
-    | 2 ->
-        let numOperands = 3
-        let [a;b;c] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
+    | InstructionEnum.Multiply ->
+        let [a;b;c] = current |> consumeInstructions 3 modeBits
         Multiply (a,b,c)
-    | 3 ->
-        let numOperands = 1
-        let [a] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
+    | InstructionEnum.Input ->
+        let [a] = current |> consumeInstructions 1 modeBits
         Input a
-    | 4 ->
-        let numOperands = 1
-        let [a] = (current |> Seq.skip 1 |> Seq.take numOperands |> Seq.toList)|> mapOperands modeBits
+    | InstructionEnum.Output ->
+        let [a] = current |> consumeInstructions 1 modeBits
         Output a
     | _ -> failwith "unimplemented opcode"
 
